@@ -55,19 +55,24 @@ function Board({xIsNext, squares, onPlay}) {
 
 //contains game data
 export default function Game(){
-  const [xIsNext, setXIsNext] = useState(true);
   const [history, setHistory] = useState([Array(9).fill(null)]);
-  const currentSquares = history[history.length - 1];
+  const [currentMove, setCurrentMove] = useState(0);
+  const xIsNext = currentMove % 2 === 0;
+  const currentSquares = history[currentMove];
 
   //logic for retaining move history
   function handlePlay(nextSquares) {
-    setHistory([...history, nextSquares]);
-    setXIsNext(!xIsNext)
+    const nextHistory = [...history.slice(0, currentMove +1), nextSquares];
+    setHistory(nextHistory);
+    setCurrentMove(nextHistory.length -1);
   }
 
+  //logic for jumping to the selected history state
   function jumpTo(nextMove){
-
+    setCurrentMove(nextMove);
   }
+
+  //generate the history interaction menu
   const moves = history.map((squares, move) =>{
     let description;
     description = (move > 0) ? 'Go to move #' + move : 'Go to game start';
